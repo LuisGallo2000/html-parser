@@ -163,8 +163,6 @@ func TestMultipleRootElements(t *testing.T) {
 	}
 }
 
-// --- Tests de Casos de Error ---
-
 func TestParseHTMLEmptyInput(t *testing.T) {
 	html := "   "
 	doc, errs := ParseHTML(html)

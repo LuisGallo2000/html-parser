@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"html-parser/parser"
+	"log"
+	"os"
 	"strings"
 )
 
@@ -49,35 +51,20 @@ func printTree(node *parser.Node, prefix string) {
 }
 
 func main() {
-	html := `
-	<!DOCTYPE html>
-	<html>
-	<head>
-		<title>Prueba de Resiliencia Total</title>
-	</head>
-	<body>
-		<!-- Atributo mal formado y tag sin cerrar -->
-		<div id="wrapper" / style="width:100%"> 
+	filename := "prueba.html"
 
-			<h1>Título Principal</b> <!-- Cierre incorrecto para h1 -->
+	content, err := os.ReadFile(filename)
+	if err != nil {
+		log.Fatalf("Error al leer el archivo '%s': %v", filename, err)
+	}
 
-			<p>Un párrafo con <em>énfasis incompleto.
-			
-			<br> <!-- Tag void sin auto-cierre, debe funcionar -->
+	htmlContent := string(content)
 
-		</div> <!-- Cierra el div, forzando cierres implícitos de h1 y p -->
+	fmt.Println("--- Parseando el contenido del HTML: ---")
+	fmt.Println(htmlContent)
 
-		<p>Este párrafo está fuera de lugar.</p> <!-- No hay error aquí, es válido -->
+	doc, errs := parser.ParseHTML(htmlContent)
 
-		</i> <!-- Tag de cierre huérfano, sin apertura -->
-	</body>
-	</html>
-	`
-
-	fmt.Println("--- Parseando el siguiente HTML: ---")
-	fmt.Println(html)
-
-	doc, errs := parser.ParseHTML(html)
 	fmt.Println("\n--- Estructura de Árbol Resultante: ---")
 	if doc != nil {
 		printTree(doc, "")
